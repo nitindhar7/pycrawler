@@ -13,3 +13,6 @@ class Queue:
     
     def size(self):
         return len(self.queue)
+    
+    def all(self):
+        return self.queue

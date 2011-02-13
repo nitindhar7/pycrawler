@@ -1,8 +1,12 @@
-from pycrawler import parser
-from urlparse import urlparse
+from pycrawler import Parser
+from pycrawler import Crawler
+from pycrawler import Queue
 
-html_parser = parser.Parser()
+html_parser = Parser()
+init_links = html_parser.get_links("http://cis.poly.edu/index.htm")
 
-for link in html_parser.get_links("http://cis.poly.edu/index.htm"):
-    o = urlparse(link)
-    print o.netloc + ' | ' + o.path + ' | ' + html_parser.get_mime_type(link)
+pycrawler = Crawler(html_parser, Queue())
+pycrawler.crawl(init_links)
+pycrawler.display()
+
+#html_parser.get_mime_type(link)
