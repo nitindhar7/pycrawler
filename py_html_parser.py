@@ -1,9 +1,9 @@
-import htmllib, formatter
+from htmllib import HTMLParser
 
-class LinksExtractor(htmllib.HTMLParser):
+class PyHtmlParser(HTMLParser):
 
     def __init__(self, formatter):
-        htmllib.HTMLParser.__init__(self, formatter)
+        HTMLParser.__init__(self, formatter)
         self.links = []
 
     def start_a(self, attrs):
