@@ -3,10 +3,15 @@ from pycrawler import Crawler
 from pycrawler import Queue
 
 html_parser = Parser()
-init_links = html_parser.get_links("http://cis.poly.edu/index.htm")
+init_links = html_parser.get_links("http://cis.poly.edu/index.htm/")
+__no_of_links = len(init_links)
 
-pycrawler = Crawler(html_parser, Queue())
-pycrawler.crawl(init_links)
-pycrawler.display()
-
-#html_parser.get_mime_type(link)
+while __no_of_links < 160:
+    pycrawler = Crawler(html_parser, Queue())
+    pycrawler.crawl(init_links)
+    pycrawler.display()
+    url_name = pycrawler.extract()
+    init_links = html_parser.get_links(url_name)
+    __no_of_links += len(init_links);
+    print init_links 
+    print __no_of_links;

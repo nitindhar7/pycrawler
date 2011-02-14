@@ -9,6 +9,10 @@ class Crawler:
         for link in links:
             self.__save_page(link)
             self.__bfs_queue.enqueue(link)
+            
+    def extract(self):
+            return self.__bfs_queue.dequeue()
+    
     
     def display(self):
         for link in self.__bfs_queue.all():
