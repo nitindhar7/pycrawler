@@ -7,7 +7,8 @@ Pycrawler is a python library designed to crawl the web in a breadth-first manne
 
 File Types
 ----------
-Pycrawler does not parse URLS ending in the following:
+Pycrawler does not parse URLS with the following suffices for obvious reasons:
+
 1. tif/bmp/png/jpg/gif
 2. js
 3. pdf
