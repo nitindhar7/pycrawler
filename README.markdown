@@ -14,7 +14,7 @@ python pycrawler.py <n> <'query'>
 
 File Types
 ----------
-Pycrawler does not parse URLS with the following suffices for obvious reasons:
+Pycrawler does not parse URLs with the following suffixes:
 
 1. tif/bmp/png/jpg/gif
 2. js
