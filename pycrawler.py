@@ -1,22 +1,24 @@
 from pycrawler import Parser
 from pycrawler import Crawler
 from pycrawler import Queue 
-import sys
 import lib
 
+# Boot pycrawler
 crawl_params = lib.boot()
 
+# Create resources
+parser = Parser()
+queue = Queue()
+pycrawler = Crawler(parser, queue)
 
-html_parser = Parser()
-init_links = html_parser.get_links("http://cis.poly.edu/index.htm/")
-__no_of_links = len(init_links)
+# initial settings
+init_links = parser.get_links("http://cis.poly.edu/index.htm/")
+pycrawler.crawl(init_links)
 
-while __no_of_links < 160:
-    pycrawler = Crawler(html_parser, Queue())
+# crawl
+while pycrawler.get_queue_length() < int(crawl_params['num_pages_to_crawl']):
+    next_url = pycrawler.next_url()
+    init_links = parser.get_links(next_url)
     pycrawler.crawl(init_links)
-    pycrawler.display()
-    url_name = pycrawler.extract()
-    init_links = html_parser.get_links(url_name)
-    __no_of_links += len(init_links);
-    print init_links 
-    print __no_of_links;
+    
+    print str(pycrawler.get_queue_length()) + "\n"
