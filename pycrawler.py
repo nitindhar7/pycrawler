@@ -6,7 +6,7 @@ import lib
 
 crawl_params = lib.boot()
 
-'''
+
 html_parser = Parser()
 init_links = html_parser.get_links("http://cis.poly.edu/index.htm/")
 __no_of_links = len(init_links)
@@ -20,4 +20,3 @@ while __no_of_links < 160:
     __no_of_links += len(init_links);
     print init_links 
     print __no_of_links;
-'''

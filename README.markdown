@@ -7,7 +7,7 @@ Pycrawler is a python library designed to crawl the web in a breadth-first manne
 
 Running
 -------
-python pycrawler.py <n> <'query'>
+python pycrawler.py n 'query'
 
 - n: Number of pages to crawl
 - 'query': Query to search. (NOTE: query has to be enclosed in quotes)
