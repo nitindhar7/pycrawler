@@ -1,6 +1,6 @@
 class Crawler:
     fileno = 0
-    
+
     def __init__(self, parser, queue):
         self.__html_parser = parser
         self.__bfs_queue = queue

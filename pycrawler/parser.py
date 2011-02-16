@@ -14,7 +14,13 @@ class Parser(HTMLParser):
             for attr in attrs:
                 if attr[0] == "href":
                     self.__links.append(attr[1])
-
+    
+    def start_area(self, attrs):
+        if len(attrs) > 0:
+            for attr in attrs:
+                if attr[0] == "href":
+                    self.__links.append(attr[1])
+    
     def get_links(self, url):
         self.__get_markup(url)
         self.__format_links(url)
