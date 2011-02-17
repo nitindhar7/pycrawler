@@ -10,9 +10,14 @@ class Parser(HTMLParser):
         self.__markup = ''
 
     def start_a(self, attrs):
+        # Clear list before scraping since it is a tmp var
+        del self.__links[:]
+        
+        # Collect anchors
         if len(attrs) > 0:
             for attr in attrs:
-                if attr[0] == "href":
+                if attr[0] == "href" and attr[1] != '#':
+                    # TODO: validate the path
                     self.__links.append(attr[1])
     
     def start_area(self, attrs):
@@ -27,19 +32,33 @@ class Parser(HTMLParser):
         return self.__links
 
     def get_mime_type(self, url):
-        return urllib.urlopen(url).info().gettype()
+        try:
+            file_type = urllib.urlopen(url).info().gettype()
+        except IOError:
+            return None
+        else:
+            return file_type
     
     def get_html(self, url):
-        self.markup = urllib.urlopen(url)
-        self.close()
-        return self.markup.read()
+        print url
+        try:
+            self.markup = urllib.urlopen(url)
+            self.close()
+        except IOError:
+            return None
+        else:
+            return self.markup.read()
     
     # PRIVATE
 
     def __get_markup(self, url):
-        self.markup = urllib.urlopen(url)
-        self.feed(self.markup.read())
-        self.close()
+        try:
+            self.markup = urllib.urlopen(url)
+            self.feed(self.markup.read())
+        except IOError:
+            return None
+        else:
+            return self.close()
 
     def __format_links(self, base_url):
         parsed_base_url = urlparse(base_url)
