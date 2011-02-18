@@ -1,4 +1,4 @@
-import sys
+import sys, json, urllib
 
 def usage():
     if (len(sys.argv) > 3):
@@ -13,3 +13,11 @@ def set_crawl_params():
 def boot():
     usage()
     return set_crawl_params()
+
+def get_google_results(query):
+    google_results = []
+    query = urllib.urlencode({'q': query})
+    url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=8&%s' % query
+    results = json.loads(urllib.urlopen(url).read())
+    for result in results['responseData']['results']: google_results.append(str(result['url']))
+    return google_results

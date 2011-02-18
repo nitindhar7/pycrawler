@@ -9,7 +9,7 @@ class Queue:
         else:
             self.queue.append( (normalized_link, link) )
             return True
-    
+
     def dequeue(self):
         tmp = self.queue[0]
         del self.queue[0]

@@ -29,6 +29,9 @@ the process of crawling/requesting the next page.
 
 Data
 ----
+Pycrawler queries Google using its ajax API to retrieve the top 8 results. The API allows more than
+8 results to be obtained granted an API Token is used.
+
 The crawler module retrieves URLs that are crawled and stored pages are locally. The data structure
 used to store urls is a simple queue using the Python dictionary structure. URLs are normalized before
 they are stored to ensure consistency and uniqueness.

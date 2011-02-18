@@ -10,10 +10,6 @@ class Parser(HTMLParser):
         self.__markup = ''
 
     def start_a(self, attrs):
-        # Clear list before scraping since it is a tmp var
-        del self.__links[:]
-        
-        # Collect anchors
         if len(attrs) > 0:
             for attr in attrs:
                 if attr[0] == "href" and attr[1] != '#':
