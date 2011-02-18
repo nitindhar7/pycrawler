@@ -1,6 +1,7 @@
 from pycrawler import Parser
 from pycrawler import Crawler
 from pycrawler import Queue 
+from pycrawler import Dictionary
 import lib
 
 # Boot pycrawler
@@ -9,7 +10,8 @@ crawl_params = lib.boot()
 # Create resources
 parser = Parser()
 queue = Queue()
-pycrawler = Crawler(parser, queue) 
+dictionary = Dictionary()
+pycrawler = Crawler(parser, queue, dictionary) 
 
 # initial settings
 pycrawler.crawl(lib.get_google_results(crawl_params['query']))

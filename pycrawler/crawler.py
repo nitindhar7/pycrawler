@@ -6,10 +6,10 @@ class Crawler:
     VALID_MIME_TYPES = ['text/html', 'text/plain', 'text/xml', 'application/xhtml+xml']
     fileno = 0
         
-    def __init__(self, parser, queue):
+    def __init__(self, parser, queue, dictionary):
         self.__html_parser = parser
-        self.__bfs_queue = queue
-        self.__dictionary = {} 
+        self.__bfs_tree = queue
+        self.__unique_links = dictionary
     
     def crawl(self, links):
         for link in links:
@@ -33,14 +33,14 @@ class Crawler:
                 self.__save_page(link)
 
     def next_url(self):
-        return self.__bfs_queue.dequeue()
+        return self.__bfs_tree.dequeue()
     
     def display(self):
-        for link in self.__bfs_queue.all():
+        for link in self.__bfs_tree.all():
             print link
     
     def get_queue_length(self):
-        return self.__bfs_queue.size()
+        return self.__bfs_tree.size()
 
     # PRIVATE
 
