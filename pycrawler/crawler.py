@@ -9,6 +9,13 @@ class Crawler:
         
     def crawl(self, links):
         for link in links:
+            # VALIDATE LINK
+            
+            # UNIQUENESS - dict
+            
+            # SAVE PAGES
+            
+            # SAVE LINKS
             link_queue_status = self.__bfs_queue.enqueue(self.__normalize_link(link), link)
             if link_queue_status is True:
                 self.__save_page(link)

@@ -44,6 +44,9 @@ class Parser(HTMLParser):
             return None
         else:
             return self.markup.read()
+        
+    def clear(self):
+        del self.__links[:]
     
     # PRIVATE
 
