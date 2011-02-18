@@ -28,6 +28,7 @@ class Parser(HTMLParser):
         return self.__links
 
     def get_mime_type(self, url):
+        # http://en.wikipedia.org/wiki/Internet_media_type
         try:
             file_type = urllib.urlopen(url).info().gettype()
         except IOError:

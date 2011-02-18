@@ -1,6 +1,9 @@
+from urlparse import urlparse
 import urllib
 
 class Crawler:
+    VALID_EXTENTIONS = ['htm', 'html']
+    VALID_MIME_TYPES = ['text/html', 'text/plain', 'text/xml', 'application/xhtml+xml']
     fileno = 0
 
     def __init__(self, parser, queue):
@@ -10,6 +13,8 @@ class Crawler:
     def crawl(self, links):
         for link in links:
             # VALIDATE LINK
+            if self.validate(link) is False:
+                continue
             
             # UNIQUENESS - dict
             
@@ -47,3 +52,36 @@ class Crawler:
     
     def __normalize_link(self, link):
         urllib.quote_plus(link)
+    
+    def __validate(self, link):
+        '''
+         TYPES OF LINKS:
+         1.  cis.poly.edu
+         2.  cis.poly.edu/
+         3.  cis.poly.edu/index.html OR cis.poly.edu/default.html
+         4.  /
+         5.  /webmaster
+         6.  /webmaster/index.asp
+         7.  ../webmaster/index.html
+         8.  cis.poly.edu/poly.jpg
+         9.  index.html
+         10. *.php/*.asp/*.cgi
+         
+         PLAN: whitelist extentions/mime_types and only allow the extentions/mime_types that are allowed to be used.
+        '''
+        parsed_link = urlparse(link)
+        extention = parsed_link.path.split('.').pop()
+        mime_type = self.__html_parser.get_mime_type(link)
+        
+        # CHECK EXTENTIONS
+        if extention not in self.VALID_EXTENTIONS:
+            return False
+        
+        # CHECK MIME TYPES
+        if mime_type not in self.VALID_MIME_TYPES:
+            return False
+        
+        # FORMAT LINKS
+        
+        
+        return True
