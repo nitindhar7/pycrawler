@@ -5,11 +5,12 @@ class Crawler:
     VALID_EXTENTIONS = ['htm', 'html']
     VALID_MIME_TYPES = ['text/html', 'text/plain', 'text/xml', 'application/xhtml+xml']
     fileno = 0
-
+        
     def __init__(self, parser, queue):
         self.__html_parser = parser
         self.__bfs_queue = queue
-        
+        self.__dictionary = {} 
+    
     def crawl(self, links):
         for link in links:
             # VALIDATE LINK
@@ -17,7 +18,13 @@ class Crawler:
                 continue
             
             # UNIQUENESS - dict
-            
+           # keys = self.__normalize_link(link)
+           # if self.__dictionary.has_key(keys):
+            #    continue
+            #else:
+                #print keys
+             #   self.__dictionary[keys] = link;
+                               
             # SAVE PAGES
             
             # SAVE LINKS

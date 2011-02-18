@@ -13,7 +13,7 @@ class Queue:
     def dequeue(self):
         tmp = self.queue[0]
         del self.queue[0]
-        return tmp[1]
+        return tmp
     
     def size(self):
         return len(self.queue)
