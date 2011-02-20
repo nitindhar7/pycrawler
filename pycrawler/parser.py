@@ -24,7 +24,6 @@ class Parser(HTMLParser):
     
     def get_links(self, url):
         self.__get_markup(url)
-        self.__format_links(url)
         return self.__links
 
     def get_mime_type(self, url):
@@ -59,11 +58,3 @@ class Parser(HTMLParser):
             return None
         else:
             return self.close()
-
-    def __format_links(self, base_url):
-        parsed_base_url = urlparse(base_url)
-
-        for index in range(len(self.__links)):
-            tmp_parsed_link = urlparse(self.__links[index])
-            if tmp_parsed_link.netloc == '':
-                self.__links[index] = parsed_base_url.scheme + '://' + parsed_base_url.netloc + self.__links[index]

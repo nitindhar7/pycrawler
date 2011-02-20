@@ -1,9 +1,14 @@
+import sys
+
 class Dictionary:
-    
     def __init__(self):
         self.dictionary = {}
         
-    def insert(self, key, value):
+    def insert(self, key, value, num_pages_to_crawl):
+        if self.size() >= num_pages_to_crawl:
+            print "Done Crawling [" + str(num_pages_to_crawl) + "] pages.\n\n"
+            for link in self.dictionary.keys(): print link
+            sys.exit()
         self.dictionary[key] = value
 
     def remove(self, key):
@@ -16,3 +21,6 @@ class Dictionary:
     
     def all(self):
         return self.dictionary
+    
+    def link_already_exists(self, normalized_link):
+        return self.dictionary.has_key(normalized_link)

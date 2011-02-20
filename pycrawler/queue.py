@@ -3,12 +3,8 @@ class Queue:
     def __init__(self):
         self.queue = []
         
-    def enqueue(self, normalized_link, link):
-        if normalized_link in dict(self.queue):
-            return False
-        else:
-            self.queue.append( (normalized_link, link) )
-            return True
+    def enqueue(self, object):
+        self.queue.append(object)
 
     def dequeue(self):
         tmp = self.queue[0]
