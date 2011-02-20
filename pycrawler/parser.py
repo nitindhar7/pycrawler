@@ -1,5 +1,4 @@
 from htmllib import HTMLParser
-from urlparse import urlparse
 import urllib, formatter
 
 class Parser(HTMLParser):
@@ -13,7 +12,6 @@ class Parser(HTMLParser):
         if len(attrs) > 0:
             for attr in attrs:
                 if attr[0] == "href" and attr[1] != '#':
-                    # TODO: validate the path
                     self.__links.append(attr[1])
     
     def start_area(self, attrs):
@@ -36,7 +34,6 @@ class Parser(HTMLParser):
             return file_type
     
     def get_html(self, url):
-        print url
         try:
             self.markup = urllib.urlopen(url)
             self.close()

@@ -6,9 +6,9 @@ class Dictionary:
         
     def insert(self, key, value, num_pages_to_crawl):
         if self.size() >= num_pages_to_crawl:
-            print "Done Crawling [" + str(num_pages_to_crawl) + "] pages.\n\n"
-            for link in self.dictionary.keys(): print link
+            print "\n\nDone Crawling [" + str(num_pages_to_crawl) + "] pages.\n"
             sys.exit()
+        
         self.dictionary[key] = value
 
     def remove(self, key):

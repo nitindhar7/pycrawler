@@ -3,6 +3,7 @@ import lib
 
 # Boot pycrawler
 crawl_params = lib.boot()
+prev_link = None
 
 # Initialize crawler
 pycrawler = Crawler() 
@@ -11,10 +12,13 @@ pycrawler = Crawler()
 links_to_crawl = lib.get_google_results(crawl_params['query'])
 
 # crawl
-while pycrawler.get_num_links_saved() < int(crawl_params['num_pages_to_crawl']):
+while True:
+    
+    # Remove any duplicate links that were provided
+    links_to_crawl = pycrawler.remove_duplicates(links_to_crawl)
 
     # Format links to ensure proper URL format
-    links_to_crawl = pycrawler.format_links(links_to_crawl)
+    links_to_crawl = pycrawler.format_links(links_to_crawl, prev_link)
 
     # Check if link was already stored
     links_to_crawl = pycrawler.remove_nonunique_links(links_to_crawl)
@@ -22,10 +26,15 @@ while pycrawler.get_num_links_saved() < int(crawl_params['num_pages_to_crawl']):
     # Ensure that the link is a html page and/or has acceptable MIME types
     links_to_crawl = pycrawler.validate_links(links_to_crawl)
 
-    # Save links to BFS Tree for crawling
+    # Save links to BFS Tree for crawling. Stop when # of URLs saved > 'num_pages_to_crawl'
     pycrawler.save_links(links_to_crawl, int(crawl_params['num_pages_to_crawl']))
 
     # Crawl new link in BFS manner
-    links_to_crawl = pycrawler.crawl()
+    crawl_results = pycrawler.crawl()
     
-    pycrawler.display()
+    # Collect new list of links to crawl. Retrieve previous link that was crawled
+    links_to_crawl = crawl_results['links_to_crawl']
+    prev_link = crawl_results['next_link']
+    
+    # Clear temp internal storage
+    pycrawler.crawl()

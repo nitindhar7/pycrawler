@@ -14,11 +14,17 @@ class Crawler:
         self.__bfs_tree = Queue()
         self.__unique_links = Dictionary()
 
-    def format_links(self, links_to_crawl):
+    def remove_duplicates(self, links_to_crawl):
+        return list(set(links_to_crawl))
+
+    def format_links(self, links_to_crawl, base_link):
+        if base_link is not None:
+            parsed_base_link = urlparse(base_link)
+        
         for index in range(len(links_to_crawl)):
             parsed_link = urlparse(links_to_crawl[index])
             if parsed_link.netloc == '':
-                links_to_crawl[index] = parsed_link.scheme + '://' + parsed_link.netloc + links_to_crawl[index]
+                links_to_crawl[index] = parsed_base_link.scheme + '://' + parsed_base_link.netloc + links_to_crawl[index]
         
         return links_to_crawl
     
@@ -47,13 +53,17 @@ class Crawler:
         for link in links_to_crawl:
             self.__unique_links.insert(self.__normalize_link(link), link, num_pages_to_crawl)
             self.__bfs_tree.enqueue(link)
+            self.__save_page(link)
+            self.__save_url(link)
     
     def crawl(self):
         next_link = self.__next_url()
         links_to_crawl = self.__html_parser.get_links(next_link)
-        self.__html_parser.clear()
-        return links_to_crawl
+        return {'links_to_crawl': links_to_crawl, 'next_link': next_link}
     
+    def clear(self):
+        self.__html_parser.clear()
+
     def display(self):
         print self.__unique_links.all()
     
@@ -63,18 +73,22 @@ class Crawler:
     # PRIVATE
 
     def __save_page(self, link):
-        # TODO: use queue size to name files instead of fileno
         new_file = open("data/pages/" + str(self.fileno) + ".html", "w")
         page_html = self.__html_parser.get_html(link)
 
         if page_html is None:
-            new_file.write("Link [" + link + "]: Markup not retrieved")
+            new_file.write("Link [" + link + "]: HTML not retrieved")
         else:
             new_file.write(page_html)
         
         new_file.close
         self.fileno += 1
     
+    def __save_url(self, link):
+        new_file = open("data/crawled_urls.txt", "a+")
+        new_file.write(link + "\n")
+        new_file.close
+
     def __next_url(self):
         return self.__bfs_tree.dequeue()
     
