@@ -3,25 +3,28 @@ PYCRAWLER - A simple BFS crawler in Python
 
 Overview
 --------
-Pycrawler is a python library designed to crawl the web in a breadth-first manner.
+Pycrawler is a python library designed to crawl the web in a breadth-first manner given a search query and the total
+number of pages to crawl.
 
 Running
 -------
-python pycrawler.py n 'query'
+<code>python pycrawler.py n 'query'</code>
 
-- n: Number of pages to crawl
+- 'n': Number of pages to crawl
 - 'query': Query to search. (NOTE: query has to be enclosed in quotes)
 
-File Types
-----------
-Pycrawler does not parse all types of URLs. Here is the blacklist of URLs extensions that Pycrawler does not deal with:
+Parsing
+-------
+Pycrawler does not parse all types of URLs. The URL extension and MIME type is used to determine whether it will be crawled.
+The parsing process extracts URLs from anchor tags and image map area tags. Here is the blacklist of URLs extensions that
+Pycrawler does not deal with:
 
 1. tif/bmp/png/jpg/gif
 2. js
 3. pdf
 4. mp3/avi/wma
 
-Here is a list of URLs that Pycrawler *can* handle:
+Here is a list of URLs types that Pycrawler *can* handle:
 
 1.  cis.poly.edu
 2.  cis.poly.edu/
@@ -29,12 +32,14 @@ Here is a list of URLs that Pycrawler *can* handle:
 4.  /
 5.  /webmaster
 6.  /webmaster/index.asp
-7.  ../webmaster/index.html
-8.  cis.poly.edu/poly.jpg
-9.  index.html
-10. *.php/*.asp/*.cgi
-         
-MIME TYPE is also used to determine whether a page is allowed or not.
+7.  cis.poly.edu/poly.jpg
+8.  index.html
+9.  *.php/*.asp/*.cgi
+
+URL Uniqueness
+--------------
+To save space, Pycrawler removes duplicate links from being parsed or saved. The redirection url and the originally received URLs
+are compared to the internal storage structure to prevent duplication.
 
 Server Requests
 ---------------
@@ -47,9 +52,10 @@ Data
 Pycrawler queries Google using its ajax API to retrieve the *top 8 results*. The API allows more than
 8 results to be obtained granted an API Token is used.
 
-The crawler module retrieves URLs that are crawled and stored pages are locally. The data structure
-used to store urls is a simple queue using the Python dictionary structure. URLs are normalized before
-they are stored to ensure consistency and uniqueness.
+The crawler module retrieves URLs that are crawled and pages are stored locally. The data structure
+used to store urls is a combination of a simple queue and a dictionary structure. URLs are normalized before
+they are stored to ensure consistency and uniqueness. Each time a link is saved, it is appended to a log file
+in the 'data' folder.
 
 Shortcomings
 ------------
@@ -63,8 +69,12 @@ Here is a brief list of identified features that are lacking in the current vers
 	- Loops could potentially be combined.
 	- URLs may be opened once and HTML may passed around instead of opening the page up twice.
 	- Potentially retrieve the MIME TYPE when opening a URL instead of making a separate call.
+4. Increase the blacklist to include more non-parseable extensions.
+5. Allow parsing of pdf's and javascript files.
+6. Relative URLs like '../products' need to be handled.
+7. Add multithreading.
 
 Bugs
 ----
 
-* Number of pages being saved is more than number of pages to crawl requested.
+* The Google ajax API is returning 8 results, but not all of them are in the top 8 results. Order of results needs to be preserved.

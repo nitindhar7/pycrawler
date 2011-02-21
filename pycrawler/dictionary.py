@@ -1,15 +1,13 @@
-import sys
-
 class Dictionary:
     def __init__(self):
         self.dictionary = {}
         
     def insert(self, key, value, num_pages_to_crawl):
         if self.size() >= num_pages_to_crawl:
-            print "\n\nDone Crawling [" + str(num_pages_to_crawl) + "] pages.\n"
-            sys.exit()
-        
-        self.dictionary[key] = value
+            return False
+        else:
+            self.dictionary[key] = value
+            return True
 
     def remove(self, key):
         tmp = self.dictionary[key]

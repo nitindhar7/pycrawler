@@ -25,6 +25,9 @@ while True:
 
     # Ensure that the link is a html page and/or has acceptable MIME types
     links_to_crawl = pycrawler.validate_links(links_to_crawl)
+    
+    # Convert all urls to their respective redirected urls
+    links_to_crawl = pycrawler.convert_to_redirected_urls(links_to_crawl)
 
     # Save links to BFS Tree for crawling. Stop when # of URLs saved > 'num_pages_to_crawl'
     pycrawler.save_links(links_to_crawl, int(crawl_params['num_pages_to_crawl']))

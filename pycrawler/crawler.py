@@ -2,17 +2,24 @@ from parser import Parser
 from queue import Queue
 from dictionary import Dictionary
 from urlparse import urlparse
-import urllib
+import urllib, sys
 
 class Crawler:
     INVALID_EXTENSIONS = ['tif', 'bmp', 'png', 'jpg', 'gif', 'js', 'pdf', 'mp3', 'avi', 'wma']
     VALID_MIME_TYPES = ['text/html', 'text/plain', 'text/xml', 'application/xhtml+xml']
     fileno = 0
+    total_data_downloaded = 0
         
     def __init__(self):
         self.__html_parser = Parser()
         self.__bfs_tree = Queue()
         self.__unique_links = Dictionary()
+        
+    def convert_to_redirected_urls(self, links_to_crawl):
+        for index in range(len(links_to_crawl)):
+            links_to_crawl[index] = self.__get_redirection_url(links_to_crawl[index])
+            
+        return links_to_crawl
 
     def remove_duplicates(self, links_to_crawl):
         return list(set(links_to_crawl))
@@ -51,10 +58,15 @@ class Crawler:
     
     def save_links(self, links_to_crawl, num_pages_to_crawl):
         for link in links_to_crawl:
-            self.__unique_links.insert(self.__normalize_link(link), link, num_pages_to_crawl)
-            self.__bfs_tree.enqueue(link)
-            self.__save_page(link)
-            self.__save_url(link)
+            continue_saving = self.__unique_links.insert(self.__normalize_link(link), link, num_pages_to_crawl)
+            
+            if continue_saving:
+                self.__bfs_tree.enqueue(link)
+                self.__save_page(link)
+                self.__save_url(link)
+            else:
+                self.__display_stats(num_pages_to_crawl)
+                sys.exit()
     
     def crawl(self):
         next_link = self.__next_url()
@@ -81,8 +93,9 @@ class Crawler:
         else:
             new_file.write(page_html)
         
-        new_file.close
         self.fileno += 1
+        self.total_data_downloaded += new_file.tell()
+        new_file.close
     
     def __save_url(self, link):
         new_file = open("data/crawled_urls.txt", "a+")
@@ -94,3 +107,15 @@ class Crawler:
     
     def __normalize_link(self, link):
         return urllib.quote_plus(link)
+    
+    def __display_stats(self, num_pages_to_crawl):
+        print "\nCrawl Stats:"
+        print "-------------------------------------"
+        print "- Pages crawled:   " + str(num_pages_to_crawl) + " pages"
+        print "- Data downloaded: " + self.__to_mb(self.total_data_downloaded) + " MB"
+    
+    def __to_mb(self, bytes):
+        return '%.2f' % (float(bytes) / 1048576)
+    
+    def __get_redirection_url(self, link):
+        return str(urllib.urlopen(link).geturl())
