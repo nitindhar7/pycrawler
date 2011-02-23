@@ -5,7 +5,7 @@ from urlparse import urlparse
 import urllib, sys
 
 class Crawler:
-    INVALID_EXTENSIONS = ['tif', 'bmp', 'png', 'jpg', 'gif', 'js', 'pdf', 'mp3', 'avi', 'wma', 'raw','LZW', 'eml' ]
+    INVALID_EXTENSIONS = ['tif', 'bmp', 'png', 'jpg', 'gif', 'js', 'pdf', 'mp3', 'avi', 'wma', 'raw','lzw', 'eml']
     VALID_MIME_TYPES = ['text/html', 'text/plain', 'text/xml', 'application/xhtml+xml']
     fileno = 0
     total_data_downloaded = 0

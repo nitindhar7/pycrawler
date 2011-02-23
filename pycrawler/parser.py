@@ -1,4 +1,5 @@
 from htmllib import HTMLParser
+from urlparse import urlparse
 import urllib, formatter, httplib, robotparser
 
 class Parser(HTMLParser):
@@ -49,8 +50,8 @@ class Parser(HTMLParser):
         del self.__links[:]
     
     def can_crawl(self, link):
-        # do some link formatting
-        robot_file_path = '' 
+        parsed_link = urlparse(link)
+        robot_file_path = parsed_link.scheme + "://" + parsed_link.netloc + "/robots.txt"
         self.__robotparser.set_url(robot_file_path)
         self.__robotparser.read()
         return self.__robotparser.can_fetch("*", link)

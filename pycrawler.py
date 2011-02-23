@@ -1,5 +1,5 @@
 from pycrawler import Crawler
-import lib, sys
+import lib
 
 # Boot pycrawler
 crawl_params = lib.boot()
@@ -39,5 +39,3 @@ while True:
 
     # Clear temp internal storage
     pycrawler.clear()
- 
-    print prev_link
