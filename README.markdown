@@ -8,10 +8,11 @@ number of pages to crawl.
 
 Running
 -------
-<code>python pycrawler.py n 'query'</code>
+	python pycrawler.py n 'query'
 
 - 'n': Number of pages to crawl
 - 'query': Query to search. (NOTE: query has to be enclosed in quotes)
+- Built on Python 2.7
 
 Parsing
 -------
@@ -39,7 +40,7 @@ Here is a list of URLs types that Pycrawler *can* handle:
 URL Uniqueness
 --------------
 To save space, Pycrawler removes duplicate links from being parsed or saved. The redirection url and the originally received URLs
-are compared to the internal storage structure to prevent duplication.
+are compared to the internal storage structure to prevent duplication. If the redirection url cannot be retrieved, the original URL is stored.
 
 Server Requests
 ---------------

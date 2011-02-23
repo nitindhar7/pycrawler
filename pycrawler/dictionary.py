@@ -1,11 +1,12 @@
 import urllib
 
 class Dictionary:
-    def __init__(self):
+    def __init__(self, max_links_allowed):
         self.dictionary = {}
+        self.max_size = int(max_links_allowed)
         
-    def insert(self, key, value, num_pages_to_crawl):
-        if self.size() >= num_pages_to_crawl:
+    def insert(self, key, value):
+        if self.size() >= self.max_size:
             return 1
         else:
             normalized_link = self.__normalize_link(self.__get_redirection_url(value))

@@ -1,13 +1,13 @@
-from htmllib import HTMLParser
+from htmllib import HTMLParser, HTMLParseError
 from urlparse import urlparse
 import urllib, formatter, httplib, robotparser
 
-class Parser(HTMLParser):
+class Parser(HTMLParser, HTMLParseError):
 
     def __init__(self):
-        HTMLParser.__init__(self, formatter.NullFormatter())
         self.__links = []
         self.__markup = ''
+        self.__parser = HTMLParser.__init__(self, formatter.NullFormatter())
         self.__robotparser = robotparser.RobotFileParser()
 
     def start_a(self, attrs):
@@ -39,12 +39,12 @@ class Parser(HTMLParser):
     
     def get_html(self, url):
         try:
-            self.markup = urllib.urlopen(url)
+            self.__markup = urllib.urlopen(url)
             self.close()
         except IOError:
             return None
         else:
-            return self.markup.read()
+            return self.__markup.read()
         
     def clear(self):
         del self.__links[:]
@@ -60,9 +60,9 @@ class Parser(HTMLParser):
 
     def __get_markup(self, url):
         try:
-            self.markup = urllib.urlopen(url)
-            self.feed(self.markup.read())
+            self.feed(urllib.urlopen(url).read())
+            self.close()
         except IOError:
-            return None
-        else:
-            return self.close()
+            self.close()
+        except HTMLParseError:
+            self.close()
