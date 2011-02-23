@@ -6,7 +6,6 @@ class Dictionary:
         
     def insert(self, key, value, num_pages_to_crawl):
         if self.size() >= num_pages_to_crawl:
-            for link in self.dictionary.values(): print link    
             return 1
         else:
             normalized_link = self.__normalize_link(self.__get_redirection_url(value))

@@ -14,15 +14,15 @@ class Crawler:
         self.__html_parser = Parser()
         self.__bfs_tree = Queue()
         self.__unique_links = Dictionary()
+    
+    def remove_duplicates(self, links_to_crawl):
+        return list(set(links_to_crawl))
         
     def convert_to_redirected_urls(self, links_to_crawl):
         for index in range(len(links_to_crawl)):
             links_to_crawl[index] = self.__get_redirection_url(links_to_crawl[index])
             
-        return links_to_crawl
-
-    def remove_duplicates(self, links_to_crawl):
-        return list(set(links_to_crawl))
+        return [link for link in links_to_crawl if link is not None]
 
     def format_links(self, links_to_crawl, base_link):
         if base_link is not None:
@@ -35,25 +35,23 @@ class Crawler:
         
         return links_to_crawl
     
-    def remove_nonunique_links(self, links_to_crawl):
+    def remove_nonunique_and_invalid_links(self, links_to_crawl):
         for index in range(len(links_to_crawl)):
             normalized_link = self.__normalize_link(links_to_crawl[index])
             if self.__unique_links.link_already_exists(normalized_link):
                 links_to_crawl[index] = None
-
-        return [link for link in links_to_crawl if link is not None]
-
-    def validate_links(self, links_to_crawl):
-        for index in range(len(links_to_crawl)):
+                continue
+            
             extension = links_to_crawl[index][-4:]
             mime_type = self.__html_parser.get_mime_type(links_to_crawl[index])
             
             if extension in self.INVALID_EXTENSIONS:
                 links_to_crawl[index] = None
+                continue
 
             if mime_type not in self.VALID_MIME_TYPES:
                 links_to_crawl[index] = None
-               
+
         return [link for link in links_to_crawl if link is not None]
     
     def save_links(self, links_to_crawl, num_pages_to_crawl):
@@ -78,7 +76,8 @@ class Crawler:
 
     def display(self):
         #print self.__unique_links.all()
-        for link in self.__bfs_tree.all(): print link + "\n\n"
+        
+        for link in self.__bfs_tree.all(): print link
         
     def get_num_links_saved(self):
         return self.__unique_links.size()
@@ -119,4 +118,9 @@ class Crawler:
         return '%.2f' % (float(bytes) / 1048576)
     
     def __get_redirection_url(self, link):
-        return str(urllib.urlopen(link).geturl())
+        try:
+            redirected_url = str(urllib.urlopen(link).geturl())
+        except IOError:
+            redirected_url = None
+        else:
+            return redirected_url 

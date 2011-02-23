@@ -13,7 +13,7 @@ links_to_crawl = lib.get_google_results(crawl_params['query'])
 
 # crawl
 while True:
-    
+
     # Remove any duplicate links that were provided
     links_to_crawl = pycrawler.remove_duplicates(links_to_crawl)
 
@@ -21,10 +21,8 @@ while True:
     links_to_crawl = pycrawler.format_links(links_to_crawl, prev_link)
 
     # Check if link was already stored
-    links_to_crawl = pycrawler.remove_nonunique_links(links_to_crawl)
-
     # Ensure that the link is a html page and/or has acceptable MIME types
-    links_to_crawl = pycrawler.validate_links(links_to_crawl)
+    links_to_crawl = pycrawler.remove_nonunique_and_invalid_links(links_to_crawl)
     
     # Convert all urls to their respective redirected urls
     links_to_crawl = pycrawler.convert_to_redirected_urls(links_to_crawl)
@@ -36,20 +34,10 @@ while True:
     crawl_results = pycrawler.crawl()
     
     # Collect new list of links to crawl. Retrieve previous link that was crawled
-    links_to_crawl = crawl_results['links_to_crawl']
-    
-    # remove_weird_links(links_to_crawl):
-    # loops   
-    #     if path == '#':
-    #          link = parsed_link.scheme + '://' + parsed_link.netloc
-    #     if parsed_link.netloc is None:
-    #          link = None
-    
+    links_to_crawl = crawl_results['links_to_crawl'][:]
     prev_link = crawl_results['next_link']
-    #print "Last Crawler== " + prev_link
-    # Clear temp internal storage
 
+    # Clear temp internal storage
     pycrawler.clear()
-    
-    print "HELLO"
-    print pycrawler.get_num_links_saved() 
+ 
+    print prev_link

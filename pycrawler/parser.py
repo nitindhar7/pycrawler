@@ -1,5 +1,5 @@
 from htmllib import HTMLParser
-import urllib, formatter, httplib
+import urllib, formatter, httplib, robotparser
 
 class Parser(HTMLParser):
 
@@ -7,6 +7,7 @@ class Parser(HTMLParser):
         HTMLParser.__init__(self, formatter.NullFormatter())
         self.__links = []
         self.__markup = ''
+        self.__robotparser = robotparser.RobotFileParser()
 
     def start_a(self, attrs):
         if len(attrs) > 0:
@@ -47,6 +48,13 @@ class Parser(HTMLParser):
     def clear(self):
         del self.__links[:]
     
+    def can_crawl(self, link):
+        # do some link formatting
+        robot_file_path = '' 
+        self.__robotparser.set_url(robot_file_path)
+        self.__robotparser.read()
+        return self.__robotparser.can_fetch("*", link)
+
     # PRIVATE
 
     def __get_markup(self, url):
