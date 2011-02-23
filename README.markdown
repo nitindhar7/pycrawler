@@ -74,6 +74,11 @@ Here is a brief list of identified features that are lacking in the current vers
 5. Allow parsing of pdf's and javascript files.
 6. Relative URLs like '../products' need to be handled.
 7. Add multithreading.
+8. Create 'Link' class and store the following link formats as attributes:
+	- opened link
+	- original
+	- redirected
+	- normalized
 
 Bugs
 ----

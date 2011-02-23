@@ -1,6 +1,6 @@
 from htmllib import HTMLParser, HTMLParseError
 from urlparse import urlparse
-import urllib, formatter, httplib, robotparser
+import urllib, formatter, robotparser
 
 class Parser(HTMLParser, HTMLParseError):
 
@@ -25,17 +25,6 @@ class Parser(HTMLParser, HTMLParseError):
     def get_links(self, url):
         self.__get_markup(url)
         return self.__links
-
-    def get_mime_type(self, url):
-        # http://en.wikipedia.org/wiki/Internet_media_type
-        try:
-            file_type = urllib.urlopen(url).info().gettype()
-        except IOError:
-            return None
-        except httplib.InvalidURL:
-            return None
-        else:
-            return file_type
     
     def get_html(self, url):
         try:

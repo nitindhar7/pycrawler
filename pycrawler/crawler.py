@@ -20,10 +20,11 @@ class Crawler:
 
         for index in range(len(links_to_crawl)):
             links_to_crawl[index] = self.__fix_relative_link(links_to_crawl[index], base_link)
-            links_to_crawl[index] = self.__get_redirection_link(links_to_crawl[index])
-            links_to_crawl[index] = self.__remove_duplicate_link(links_to_crawl[index])
-            links_to_crawl[index] = self.__remove_invalid_link(links_to_crawl[index])
-            self.__save_link(links_to_crawl[index])
+            link_info             = self.__get_redirection_link(links_to_crawl[index])
+            links_to_crawl[index] = link_info['redirected_link']
+            links_to_crawl[index] = self.__remove_duplicate_link(link_info)
+            links_to_crawl[index] = self.__remove_invalid_link(link_info)
+            self.__save_link(link_info)
         
         return [link for link in links_to_crawl if link is not None]       
     
@@ -54,40 +55,40 @@ class Crawler:
     
     def __get_redirection_link(self, link):
         try:
-            return str(urllib.urlopen(link).geturl())
+            opened_link = urllib.urlopen(link)
+            return {'opened_link': opened_link, 'redirected_link': str(opened_link.geturl()), 'normalized_link': self.__normalize_link(link)}
         except IOError:
-            return link
+            return {'opened_link': None, 'redirected_link': None, 'normalized_link': None}
     
-    def __remove_duplicate_link(self, link):
-        if link is None: return link
-        
-        normalized_link = self.__normalize_link(link)
-        if self.__unique_links.link_already_exists(normalized_link):
+    def __remove_duplicate_link(self, link_info):
+        if link_info['redirected_link'] is None:
+            return link_info['redirected_link']
+        elif self.__unique_links.link_already_exists(link_info['normalized_link']):
             return None
         else:
-            return link
+            return link_info['redirected_link']
     
-    def __remove_invalid_link(self, link):
-        if link is None: return link
+    def __remove_invalid_link(self, link_info):
+        if link_info['redirected_link'] is None: return link_info['redirected_link']
 
-        if link[-4:].lower() in self.INVALID_EXTENSIONS:
+        if link_info['redirected_link'][-4:].lower() in self.INVALID_EXTENSIONS:
             return None
-        elif self.__html_parser.get_mime_type(link) not in self.VALID_MIME_TYPES:
+        elif self.__get_mime_type(link_info['opened_link']) not in self.VALID_MIME_TYPES:
             return None
         else:
-            return link
+            return link_info['redirected_link']
     
-    def __save_link(self, link):
-        if link is not None:
-            insert_status = self.__unique_links.insert(self.__normalize_link(link), link)
-            self.__bfs_tree.enqueue(link)
+    def __save_link(self, link_info):
+        if link_info['redirected_link'] is not None:
+            insert_status = self.__unique_links.insert(link_info['normalized_link'], link_info['redirected_link'])
+            self.__bfs_tree.enqueue(link_info['redirected_link'])
     
             if insert_status == 1:
                 self.__display_stats()
                 sys.exit()
             if insert_status == 3:
-                self.__save_page(link)
-                self.__save_url(link)
+                self.__save_page(link_info['redirected_link'])
+                self.__save_url(link_info['redirected_link'])
 
     def __normalize_link(self, link):
         return urllib.quote_plus(link)
@@ -121,3 +122,10 @@ class Crawler:
     
     def __to_mb(self, bytes):
         return '%.2f' % (float(bytes) / 1048576)
+    
+    def __get_mime_type(self, opened_link):
+        # http://en.wikipedia.org/wiki/Internet_media_type
+        try:
+            return opened_link.info().gettype()
+        except IOError:
+            return None
