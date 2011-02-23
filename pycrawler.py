@@ -31,13 +31,21 @@ while True:
 
     # Save links to BFS Tree for crawling. Stop when # of URLs saved > 'num_pages_to_crawl'
     pycrawler.save_links(links_to_crawl, int(crawl_params['num_pages_to_crawl']))
-
+        
     # Crawl new link in BFS manner
     crawl_results = pycrawler.crawl()
     
     # Collect new list of links to crawl. Retrieve previous link that was crawled
     links_to_crawl = crawl_results['links_to_crawl']
-    prev_link = crawl_results['next_link']
     
+    # remove_weird_links(links_to_crawl):
+    # loops   
+    #     if path == '#':
+    #          link = parsed_link.scheme + '://' + parsed_link.netloc
+    #     if parsed_link.netloc is None:
+    #          link = None
+    
+    prev_link = crawl_results['next_link']
+    #print "Last Crawler== " + prev_link
     # Clear temp internal storage
-    pycrawler.crawl()
+    pycrawler.clear()

@@ -53,20 +53,20 @@ class Crawler:
 
             if mime_type not in self.VALID_MIME_TYPES:
                 links_to_crawl[index] = None
-
+               
         return [link for link in links_to_crawl if link is not None]
     
     def save_links(self, links_to_crawl, num_pages_to_crawl):
         for link in links_to_crawl:
-            continue_saving = self.__unique_links.insert(self.__normalize_link(link), link, num_pages_to_crawl)
-            
-            if continue_saving:
+            insert_status = self.__unique_links.insert(self.__normalize_link(link), link, num_pages_to_crawl)
+                        
+            if insert_status == 1:
+                self.__display_stats()
+                sys.exit()
+            if insert_status == 3:
                 self.__bfs_tree.enqueue(link)
                 self.__save_page(link)
-                self.__save_url(link)
-            else:
-                self.__display_stats(num_pages_to_crawl)
-                sys.exit()
+                self.__save_url(link)       
     
     def crawl(self):
         next_link = self.__next_url()
@@ -77,8 +77,9 @@ class Crawler:
         self.__html_parser.clear()
 
     def display(self):
-        print self.__unique_links.all()
-    
+        #print self.__unique_links.all()
+        for link in self.__bfs_tree.all(): print link + "\n\n"
+        
     def get_num_links_saved(self):
         return self.__unique_links.size()
 
@@ -91,7 +92,7 @@ class Crawler:
         if page_html is None:
             new_file.write("Link [" + link + "]: HTML not retrieved")
         else:
-            new_file.write(page_html)
+            new_file.write(link + "\n\n" + page_html)
         
         self.fileno += 1
         self.total_data_downloaded += new_file.tell()
@@ -108,10 +109,10 @@ class Crawler:
     def __normalize_link(self, link):
         return urllib.quote_plus(link)
     
-    def __display_stats(self, num_pages_to_crawl):
+    def __display_stats(self):
         print "\nCrawl Stats:"
         print "-------------------------------------"
-        print "- Pages crawled:   " + str(num_pages_to_crawl) + " pages"
+        print "- Pages crawled:   " + str(self.__unique_links.size()) + " pages"
         print "- Data downloaded: " + self.__to_mb(self.total_data_downloaded) + " MB"
     
     def __to_mb(self, bytes):

@@ -1,5 +1,5 @@
 from htmllib import HTMLParser
-import urllib, formatter
+import urllib, formatter, httplib
 
 class Parser(HTMLParser):
 
@@ -29,6 +29,8 @@ class Parser(HTMLParser):
         try:
             file_type = urllib.urlopen(url).info().gettype()
         except IOError:
+            return None
+        except httplib.InvalidURL:
             return None
         else:
             return file_type
