@@ -48,4 +48,8 @@ while True:
     prev_link = crawl_results['next_link']
     #print "Last Crawler== " + prev_link
     # Clear temp internal storage
+
     pycrawler.clear()
+    
+    print "HELLO"
+    print pycrawler.get_num_links_saved() 
