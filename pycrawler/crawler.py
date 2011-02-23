@@ -5,7 +5,7 @@ from urlparse import urlparse
 import urllib, sys
 
 class Crawler:
-    INVALID_EXTENSIONS = ['tif', 'bmp', 'png', 'jpg', 'gif', 'js', 'pdf', 'mp3', 'avi', 'wma']
+    INVALID_EXTENSIONS = ['tif', 'bmp', 'png', 'jpg', 'gif', 'js', 'pdf', 'mp3', 'avi', 'wma', 'raw','LZW', 'eml' ]
     VALID_MIME_TYPES = ['text/html', 'text/plain', 'text/xml', 'application/xhtml+xml']
     fileno = 0
     total_data_downloaded = 0
@@ -57,12 +57,13 @@ class Crawler:
     def save_links(self, links_to_crawl, num_pages_to_crawl):
         for link in links_to_crawl:
             insert_status = self.__unique_links.insert(self.__normalize_link(link), link, num_pages_to_crawl)
+            self.__bfs_tree.enqueue(link)
                         
             if insert_status == 1:
                 self.__display_stats()
                 sys.exit()
             if insert_status == 3:
-                self.__bfs_tree.enqueue(link)
+                
                 self.__save_page(link)
                 self.__save_url(link)       
     
@@ -75,10 +76,8 @@ class Crawler:
         self.__html_parser.clear()
 
     def display(self):
-        #print self.__unique_links.all()
-        
-        for link in self.__bfs_tree.all(): print link
-        
+        print self.__unique_links.all()
+
     def get_num_links_saved(self):
         return self.__unique_links.size()
 

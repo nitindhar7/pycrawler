@@ -9,7 +9,6 @@ class Dictionary:
             return 1
         else:
             normalized_link = self.__normalize_link(self.__get_redirection_url(value))
-
             if self.dictionary.has_key(normalized_link):
                 return 2
             else:

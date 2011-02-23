@@ -1,5 +1,5 @@
 from pycrawler import Crawler
-import lib
+import lib, sys
 
 # Boot pycrawler
 crawl_params = lib.boot()
@@ -29,7 +29,7 @@ while True:
 
     # Save links to BFS Tree for crawling. Stop when # of URLs saved > 'num_pages_to_crawl'
     pycrawler.save_links(links_to_crawl, int(crawl_params['num_pages_to_crawl']))
-        
+      
     # Crawl new link in BFS manner
     crawl_results = pycrawler.crawl()
     
