@@ -12,7 +12,6 @@ class Crawler:
     total_status_401 = 0
     total_status_404 = 0
     total_status_500 = 0
-    
 
     def __init__(self, max_links_allowed, compress_status):
         self.__html_parser = Parser()

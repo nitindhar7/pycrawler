@@ -85,18 +85,13 @@ Here is a brief list of identified features that are lacking in the current vers
 4.  Increase the blacklist to include more non-parseable extensions.
 5.  Allow parsing of pdfs and javascript files.
 6.  Add multithreading.
-7.  Create 'Link' class and store the following link formats as attributes:
-	- opened link
-	- original
-	- redirected
-	- normalized
-	- depth
-8.  When a opening a url fails, we are not retrying that url. We just skip it and move on to the next one, hoping that, that page will be
+7.  When a opening a url fails, we are not retrying that url. We just skip it and move on to the next one, hoping that, that page will be
     crawled elsewhere.
-9. Need to create a helper method to decompress html.
-10. Use 'getopt' to parse command line options instead of hardcoding them. Allow compress level to be entered as an argument to the '-c' flag.
+8.  Need to create a helper method to decompress html.
+9.  Use 'getopt' to parse command line options instead of hardcoding them. Allow compress level to be entered as an argument to the '-c' flag.
 
 Bugs
 ----
 
 * The Google ajax API is returning 8 results, but not all of them are in the top 8 results. Order of results needs to be preserved.
+* Have not dealt with IE relevent HTML declarations like '<..CDATA..>' or '<..!IE..>'

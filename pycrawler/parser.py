@@ -37,4 +37,4 @@ class Parser(HTMLParser, HTMLParseError):
         except IOError:
             self.close()
         except HTMLParseError:
-            self.close()
+            return None
