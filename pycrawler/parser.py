@@ -1,6 +1,5 @@
 from htmllib import HTMLParser, HTMLParseError
-from urlparse import urlparse
-import lib, formatter, robotparser
+import lib, formatter
 
 class Parser(HTMLParser, HTMLParseError):
 
@@ -8,7 +7,6 @@ class Parser(HTMLParser, HTMLParseError):
         self.__links = []
         self.__markup = ''
         self.__parser = HTMLParser.__init__(self, formatter.NullFormatter())
-        self.__robotparser = robotparser.RobotFileParser()
         self.__pyurlopener = lib.PyURLOpener()
 
     def start_a(self, attrs):
@@ -29,13 +27,6 @@ class Parser(HTMLParser, HTMLParseError):
         
     def clear(self):
         del self.__links[:]
-    
-    def can_crawl(self, link):
-        parsed_link = urlparse(link)
-        robot_file_path = parsed_link.scheme + "://" + parsed_link.netloc + "/robots.txt"
-        self.__robotparser.set_url(robot_file_path)
-        self.__robotparser.read()
-        return self.__robotparser.can_fetch("*", link)
 
     # PRIVATE
 

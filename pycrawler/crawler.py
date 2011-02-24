@@ -19,11 +19,12 @@ class Crawler:
         links_to_crawl = self.__remove_duplicates(links_to_crawl)
 
         for link in links_to_crawl:
-            link_to_process              = Link(link)
+            link_to_process = Link(link)
             link_to_process.fix_relative_link(base_link)
             link_to_process.get_redirection_link()
             link_to_process.remove_duplicate_link(self.__unique_links)
             link_to_process.remove_invalid_link()
+            link_to_process.remove_uncrawlable_link()
             self.__save_link(link_to_process)
 
     def crawl(self):
