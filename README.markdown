@@ -8,8 +8,8 @@ number of pages to crawl.
 
 Running
 -------
-	python pycrawler.py n 'query'
-
+	python pycrawler.py [OPTIONS] n 'query'
+- [OPTIONS]: -c: Save page HTML in compressed format
 - 'n': Number of pages to crawl
 - 'query': Query to search. (NOTE: query has to be enclosed in quotes)
 - Built on Python 2.7
@@ -21,11 +21,11 @@ The parsing process extracts URLs from anchor tags and image map area tags. Here
 Pycrawler does not deal with:
 
 1. tif/bmp/png/jpg/gif
-2. js
+2. js/raw/lzw/eml/cgi
 3. pdf
 4. mp3/avi/wma
 
-Here is a list of URLs types that Pycrawler *can* handle:
+Here is are examples of the types of URLs that Pycrawler *can* handle:
 
 1.  cis.poly.edu
 2.  cis.poly.edu/
@@ -36,17 +36,23 @@ Here is a list of URLs types that Pycrawler *can* handle:
 7.  cis.poly.edu/poly.jpg
 8.  index.html
 9.  *.php/*.asp/*.cgi
+10. ../products
 
 URL Uniqueness
 --------------
 To save space, Pycrawler removes duplicate links from being parsed or saved. The redirection url and the originally received URLs
-are compared to the internal storage structure to prevent duplication. If the redirection url cannot be retrieved, the original URL is stored.
+are compared to the internal storage structure to prevent duplication. If the redirection url cannot be retrieved, the original
+URL is stored.
 
 Server Requests
 ---------------
 Pycrawler handles I/O socket exceptions when opening a page that was requested.
 The error is handled on the microlevel and no delegation occurs. This helps speed up
-the process of crawling/requesting the next page. 
+the process of crawling/requesting the next page. HTML parsing errors are handled by skipping that page.
+
+Pages that require authentication are dealt with via a custom url opener class, which is a child class of the
+'FancyURLOpener' class from the 'urllib' package. When such an error occurs, Pycrawler returns nothing so that
+the page is skipped.
 
 Data
 ----
@@ -58,27 +64,33 @@ used to store urls is a combination of a simple queue and a dictionary structure
 they are stored to ensure consistency and uniqueness. Each time a link is saved, it is appended to a log file
 in the 'data' folder.
 
+When Pycrawler is run the with '-c' option on, page html is saved in compressed format using 'zlib' at compress level 6 (default).
+
 Shortcomings
 ------------
 Here is a brief list of identified features that are lacking in the current version of Pycrawler:
 
-1. URLs with fragments like "http://www.site.com/search#cars" are being treated as unique compared to the same URLs with the
-   fragments removed even though they both point to the same webpage.
-2. The Google ajax API only retrieves the top 8 results. We need to add functionality so that an API token can be used to retrieve
-   over 8 top results. 
-3. Serious performance improvements need to be made:
+1.  URLs with fragments like "http://www.site.com/search#cars" are being treated as unique compared to the same URLs with the
+    fragments removed even though they both point to the same webpage.
+2.  The Google ajax API only retrieves 8 results. We need to add functionality so that an API token can be used to retrieve
+    more than 8 top results. 
+3.  Serious performance improvements need to be made:
 	- Loops could potentially be combined.
 	- URLs may be opened once and HTML may passed around instead of opening the page up twice.
 	- Potentially retrieve the MIME TYPE when opening a URL instead of making a separate call.
-4. Increase the blacklist to include more non-parseable extensions.
-5. Allow parsing of pdf's and javascript files.
-6. Relative URLs like '../products' need to be handled.
-7. Add multithreading.
-8. Create 'Link' class and store the following link formats as attributes:
+4.  Increase the blacklist to include more non-parseable extensions.
+5.  Allow parsing of pdfs and javascript files.
+6.  Add multithreading.
+7.  Create 'Link' class and store the following link formats as attributes:
 	- opened link
 	- original
 	- redirected
 	- normalized
+	- depth
+8.  When a opening a url fails, we are not retrying that url. We just skip it and move on to the next one, hoping that, that page will be
+    crawled elsewhere.
+9. Need to create a helper method to decompress html.
+10. Use 'getopt' to parse command line options instead of hardcoding them. Allow compress level to be entered as an argument to the '-c' flag.
 
 Bugs
 ----

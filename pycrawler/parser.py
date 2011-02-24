@@ -1,6 +1,6 @@
 from htmllib import HTMLParser, HTMLParseError
 from urlparse import urlparse
-import urllib, formatter, robotparser
+import lib, formatter, robotparser
 
 class Parser(HTMLParser, HTMLParseError):
 
@@ -9,6 +9,7 @@ class Parser(HTMLParser, HTMLParseError):
         self.__markup = ''
         self.__parser = HTMLParser.__init__(self, formatter.NullFormatter())
         self.__robotparser = robotparser.RobotFileParser()
+        self.__pyurlopener = lib.PyURLOpener()
 
     def start_a(self, attrs):
         if len(attrs) > 0:
@@ -22,18 +23,9 @@ class Parser(HTMLParser, HTMLParseError):
                 if attr[0] == "href" and attr[0] != '#':
                     self.__links.append(attr[1])
     
-    def get_links(self, url):
-        self.__get_markup(url)
+    def get_links(self, link):
+        self.__get_markup(link)
         return self.__links
-    
-    def get_html(self, url):
-        try:
-            self.__markup = urllib.urlopen(url)
-            self.close()
-        except IOError:
-            return None
-        else:
-            return self.__markup.read()
         
     def clear(self):
         del self.__links[:]
@@ -47,9 +39,9 @@ class Parser(HTMLParser, HTMLParseError):
 
     # PRIVATE
 
-    def __get_markup(self, url):
+    def __get_markup(self, link):
         try:
-            self.feed(urllib.urlopen(url).read())
+            self.feed(self.__pyurlopener.open(link).read())
             self.close()
         except IOError:
             self.close()

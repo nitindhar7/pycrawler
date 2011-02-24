@@ -6,7 +6,7 @@ crawl_params = lib.boot()
 next_link = None
 
 # Initialize crawler
-pycrawler = Crawler(crawl_params['num_pages_to_crawl'])
+pycrawler = Crawler(crawl_params['num_pages_to_crawl'], crawl_params['compress'])
 
 # Retrieve initial links from Google Web Search
 links_to_crawl = lib.get_google_results(crawl_params['query'])

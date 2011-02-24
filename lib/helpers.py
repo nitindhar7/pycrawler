@@ -1,14 +1,18 @@
 import sys, json, urllib
 
 def usage():
-    if (len(sys.argv) > 3):
-        print "\nUSAGE: pycrawler.py n 'query'\n"
+    if len(sys.argv) > 4:
+        print "\nUSAGE: pycrawler.py [OPTIONS] n 'query'\n"
+        print "       [OPTIONS] => -c: save page HTML as compressed"
         print "       n         => number of pages to crawl"
         print "       query     => query to search (enclosed in quotes)\n"
         sys.exit()
         
 def set_crawl_params():
-    return { 'num_pages_to_crawl': sys.argv[1], 'query': sys.argv[2] }
+    if '-c' in sys.argv or '-C' in sys.argv:
+        return { 'num_pages_to_crawl': sys.argv[2], 'query': sys.argv[3], 'compress': True}
+    else:
+        return { 'num_pages_to_crawl': sys.argv[2], 'query': sys.argv[3], 'compress': False}
 
 def boot():
     usage()
