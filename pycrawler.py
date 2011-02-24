@@ -4,6 +4,7 @@ import lib
 # Boot pycrawler
 crawl_params = lib.boot()
 next_link = None
+source_depth = 0
 
 # Initialize crawler
 pycrawler = Crawler(crawl_params['num_pages_to_crawl'], crawl_params['compress'])
@@ -20,7 +21,7 @@ while True:
     # Ensure that the link is a html page and/or has acceptable MIME types
     # Save links to BFS Tree for crawling. Stop when # of URLs saved > 'num_pages_to_crawl'
     pycrawler.format_validate_and_save_links(links_to_crawl, next_link)
-      
+     
     # Crawl next link in BFS manner
     crawl_results = pycrawler.crawl()
     

@@ -12,7 +12,7 @@ def set_crawl_params():
     if '-c' in sys.argv or '-C' in sys.argv:
         return { 'num_pages_to_crawl': sys.argv[2], 'query': sys.argv[3], 'compress': True}
     else:
-        return { 'num_pages_to_crawl': sys.argv[2], 'query': sys.argv[3], 'compress': False}
+        return { 'num_pages_to_crawl': sys.argv[1], 'query': sys.argv[2], 'compress': False}
 
 def boot():
     usage()
