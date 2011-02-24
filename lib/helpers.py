@@ -1,7 +1,7 @@
 import sys, json, urllib
 
 def usage():
-    if len(sys.argv) > 4:
+    if len(sys.argv) > 5:
         print "\nUSAGE: pycrawler.py [OPTIONS] n 'query'\n"
         print "       [OPTIONS] => -c: save page HTML as compressed"
         print "       n         => number of pages to crawl"

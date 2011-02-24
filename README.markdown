@@ -8,8 +8,8 @@ number of pages to crawl.
 
 Running
 -------
-	python pycrawler.py [OPTIONS] n 'query'
-- [OPTIONS]: -c: Save page HTML in compressed format
+	python pycrawler.py [... OPTIONS ...] n 'query'
+- OPTIONS: -c: Save page HTML in compressed format
 - 'n': Number of pages to crawl
 - 'query': Query to search. (NOTE: query has to be enclosed in quotes)
 - Built on Python 2.7
@@ -62,7 +62,11 @@ Pycrawler queries Google using its ajax API to retrieve the *top 8 results*. The
 The crawler module retrieves URLs that are crawled and pages are stored locally. The data structure
 used to store urls is a combination of a simple queue and a dictionary structure. URLs are normalized before
 they are stored to ensure consistency and uniqueness. Each time a link is saved, it is appended to a log file
-in the 'data' folder.
+in the 'data' folder. Crawl statistics are placed at the end of this log file. These include:
+- Number of pages crawled
+- Total data downloaded
+- Total Time Taken (in seconds)
+- HTTP return code counts (200, 401, 404 & 500)
 
 When Pycrawler is run the with '-c' option on, page html is saved in compressed format using 'zlib' at compress level 6 (default).
 
